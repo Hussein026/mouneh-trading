@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product &mdash; Mouneh Trading Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="wrap nav">
+    <a href="index.html" class="brand"><span class="brand-mark">&#9670;</span> Mouneh <small>Trading Post</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="sell.html">Sell on Mouneh</a></li>
+      <li><a href="index.html#how">How It Works</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-link">Crate <span class="cart-count">0</span></a>
+      <a href="shop.html" class="btn btn-primary btn-sm">Browse Goods</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+</header>
+
+<section style="padding-top:48px;">
+  <div class="wrap">
+    <div class="breadcrumb" id="crumb"><a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="crumb-name"></span></div>
+    <div class="product-detail" id="detail"></div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Same shelf, same region</p>
+        <h2>You might also trade for</h2>
+      </div>
+    </div>
+    <div class="product-grid" id="related-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand" style="color:var(--parchment)"><span class="brand-mark">&#9670;</span> Mouneh</div>
+        <p>A direct trading post connecting households and small producers of traditional mouneh with the people who still want it made the old way.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul><li><a href="shop.html">All Categories</a></li><li><a href="shop.html">Oils &amp; Pressed</a></li><li><a href="shop.html">Preserves</a></li></ul>
+      </div>
+      <div>
+        <h4>Trade</h4>
+        <ul><li><a href="sell.html">Become a Seller</a></li><li><a href="index.html#how">How Trading Works</a></li></ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul><li><a href="index.html#about">About Mouneh</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Mouneh Trading Post. Made with respect for the jar.</span>
+      <span>Weighed &amp; stamped by hand.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get("id") || PRODUCTS[0].id;
+  const p = findProduct(id) || PRODUCTS[0];
+  document.title = p.name + " — Mouneh Trading Post";
+  document.getElementById("crumb-name").textContent = p.name;
+
+  document.getElementById("detail").innerHTML = `
+    <div class="product-gallery">
+      ${jarSwatch(p.jarType, 160)}
+      <div class="stamp on-dark"><span class="region">${p.region}</span><span class="year">${p.year}</span></div>
+    </div>
+    <div class="product-info">
+      <span class="kind">${p.kind}</span>
+      <h1>${p.name}</h1>
+      <p class="vendor-line">Traded by <a href="#">${p.vendor}</a></p>
+      <div class="price-row">
+        <span class="big">${money(p.price)}</span>
+        <span class="unit">per ${p.unit}</span>
+      </div>
+      <p>${p.desc}</p>
+      <div class="qty-row">
+        <div class="qty-stepper">
+          <button type="button" id="qty-minus" aria-label="Decrease quantity">&minus;</button>
+          <input type="text" id="qty-input" value="1" readonly aria-label="Quantity">
+          <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
+        </div>
+        <span style="font-family:var(--mono); font-size:0.82rem; color:rgba(34,29,23,0.55);">${p.stock} jars in stock</span>
+      </div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="add-btn">Add to Crate</button>
+        <a href="cart.html" class="btn btn-ghost">View Crate</a>
+      </div>
+      <div class="detail-list">
+        <div class="row"><span>Harvest / Batch</span><span>${p.harvest}</span></div>
+        <div class="row"><span>Method</span><span>${p.method}</span></div>
+        <div class="row"><span>Weight</span><span>${p.weight}</span></div>
+        <div class="row"><span>Region of Origin</span><span>${p.region}</span></div>
+      </div>
+    </div>
+  `;
+
+  let qty = 1;
+  const qtyInput = document.getElementById("qty-input");
+  document.getElementById("qty-minus").addEventListener("click", () => { qty = Math.max(1, qty-1); qtyInput.value = qty; });
+  document.getElementById("qty-plus").addEventListener("click", () => { qty = Math.min(p.stock, qty+1); qtyInput.value = qty; });
+  document.getElementById("add-btn").addEventListener("click", () => addToCart(p.id, qty));
+
+  const related = PRODUCTS.filter(x => x.id !== p.id && (x.kind === p.kind || x.region === p.region)).slice(0,4);
+  const fallback = PRODUCTS.filter(x => x.id !== p.id).slice(0,4);
+  const showList = related.length ? related : fallback;
+  document.getElementById("related-grid").innerHTML = showList.map(x => `
+    <a href="product.html?id=${x.id}" class="card">
+      <div class="card-media" style="background:var(--parchment-dim);">
+        ${jarSwatch(x.jarType, 84)}
+        <div class="stamp"><span class="region">${x.region}</span><span class="year">${x.year}</span></div>
+      </div>
+      <div class="card-body">
+        <span class="kind">${x.kind}</span>
+        <h3>${x.name}</h3>
+        <span class="vendor">${x.vendor}</span>
+        <div class="card-foot"><span class="price">${money(x.price)} <span>/ ${x.unit}</span></span></div>
+      </div>
+    </a>`).join("");
+</script>
+</body>
+</html>

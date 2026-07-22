@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Crate &mdash; Mouneh Trading Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="wrap nav">
+    <a href="index.html" class="brand"><span class="brand-mark">&#9670;</span> Mouneh <small>Trading Post</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="sell.html">Sell on Mouneh</a></li>
+      <li><a href="index.html#how">How It Works</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-link active">Crate <span class="cart-count">0</span></a>
+      <a href="shop.html" class="btn btn-primary btn-sm">Browse Goods</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Your Crate</div>
+    <p class="eyebrow">Ready to trade</p>
+    <h1>Your Crate</h1>
+  </div>
+</div>
+
+<section>
+  <div class="wrap" id="cart-wrap"></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand" style="color:var(--parchment)"><span class="brand-mark">&#9670;</span> Mouneh</div>
+        <p>A direct trading post connecting households and small producers of traditional mouneh with the people who still want it made the old way.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul><li><a href="shop.html">All Categories</a></li><li><a href="shop.html">Preserves</a></li></ul>
+      </div>
+      <div>
+        <h4>Trade</h4>
+        <ul><li><a href="sell.html">Become a Seller</a></li><li><a href="index.html#how">How Trading Works</a></li></ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul><li><a href="index.html#about">About Mouneh</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Mouneh Trading Post. Made with respect for the jar.</span>
+      <span>Weighed &amp; stamped by hand.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  function renderCart(){
+    const cart = getCart();
+    const ids = Object.keys(cart).filter(id => findProduct(id));
+    const wrap = document.getElementById("cart-wrap");
+
+    if(ids.length === 0){
+      wrap.innerHTML = `
+        <div class="empty-cart">
+          <div class="stamp" style="margin:0 auto 24px;"><span class="region">EMPTY</span><span class="year">&mdash;</span></div>
+          <h2 style="margin-bottom:14px;">Your crate is empty.</h2>
+          <p style="color:rgba(34,29,23,0.6); margin-bottom:28px;">Nothing's been put aside yet. Go find something worth trading for.</p>
+          <a href="shop.html" class="btn btn-primary">Browse the Shelf</a>
+        </div>`;
+      return;
+    }
+
+    const fee = 3.5;
+    const subtotal = ids.reduce((sum, id) => sum + findProduct(id).price * cart[id], 0);
+    const total = subtotal + fee;
+
+    wrap.innerHTML = `
+      <div style="display:grid; grid-template-columns: 1fr 340px; gap:50px; align-items:start;">
+        <table class="cart-table">
+          <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead>
+          <tbody id="cart-rows"></tbody>
+        </table>
+        <div class="cart-summary">
+          <h3 style="margin-bottom:20px;">Trade Summary</h3>
+          <div class="summary-row"><span>Subtotal</span><span>${money(subtotal)}</span></div>
+          <div class="summary-row"><span>Trading fee</span><span>${money(fee)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${money(total)}</span></div>
+          <button class="btn btn-primary btn-block" style="margin-top:20px;" id="checkout-btn">Complete Trade</button>
+          <a href="shop.html" style="display:block; text-align:center; margin-top:14px; font-size:0.88rem; color:rgba(34,29,23,0.6);">&larr; Keep Browsing</a>
+        </div>
+      </div>`;
+
+    document.getElementById("cart-rows").innerHTML = ids.map(id => {
+      const p = findProduct(id);
+      const qty = cart[id];
+      return `
+        <tr>
+          <td>
+            <div class="cart-item">
+              ${jarSwatch(p.jarType, 52)}
+              <div><h4>${p.name}</h4><p>${p.vendor}</p></div>
+            </div>
+          </td>
+          <td class="price">${money(p.price)}</td>
+          <td>
+            <div class="qty-stepper" style="width:fit-content;">
+              <button type="button" data-minus="${id}">&minus;</button>
+              <input type="text" value="${qty}" readonly style="width:34px;">
+              <button type="button" data-plus="${id}">+</button>
+            </div>
+          </td>
+          <td class="price">${money(p.price * qty)}</td>
+          <td><button class="remove-btn" data-remove="${id}">Remove</button></td>
+        </tr>`;
+    }).join("");
+
+    document.querySelectorAll("[data-minus]").forEach(b => b.addEventListener("click", () => {
+      const id = b.dataset.minus;
+      setQty(id, Math.max(0, getCart()[id] - 1));
+      renderCart();
+    }));
+    document.querySelectorAll("[data-plus]").forEach(b => b.addEventListener("click", () => {
+      const id = b.dataset.plus;
+      setQty(id, getCart()[id] + 1);
+      renderCart();
+    }));
+    document.querySelectorAll("[data-remove]").forEach(b => b.addEventListener("click", () => {
+      removeFromCart(b.dataset.remove);
+      renderCart();
+      showToast("Removed from your crate.");
+    }));
+    const checkoutBtn = document.getElementById("checkout-btn");
+    if(checkoutBtn) checkoutBtn.addEventListener("click", () => {
+      showToast("This is a demo trading post — checkout isn't wired to real payment yet.");
+    });
+  }
+  renderCart();
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell on Mouneh &mdash; Trade Your Provisions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="wrap nav">
+    <a href="index.html" class="brand"><span class="brand-mark">&#9670;</span> Mouneh <small>Trading Post</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="sell.html" class="active">Sell on Mouneh</a></li>
+      <li><a href="index.html#how">How It Works</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-link">Crate <span class="cart-count">0</span></a>
+      <a href="shop.html" class="btn btn-primary btn-sm">Browse Goods</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Sell on Mouneh</div>
+    <p class="eyebrow">For makers, not manufacturers</p>
+    <h1>Trade what your kitchen already makes.</h1>
+  </div>
+</div>
+
+<section>
+  <div class="wrap split">
+    <div class="fade-up">
+      <p class="eyebrow">Why sellers choose Mouneh</p>
+      <h2 style="margin-top:14px; font-size:clamp(1.9rem,3vw,2.6rem);">You set the batch. We find the buyer.</h2>
+      <p style="margin-top:18px; color:rgba(34,29,23,0.7); max-width:48ch;">List whatever you've put up this season &mdash; a dozen jars or two hundred. Buyers see exactly where it's from and when it was made, and your payment comes to you directly, minus a flat trading fee.</p>
+      <div class="stat-block">
+        <div><strong>91%</strong><span>Of price goes to the maker</span></div>
+        <div><strong>0</strong><span>Warehouse minimums</span></div>
+        <div><strong>3 days</strong><span>Average listing to first sale</span></div>
+      </div>
+    </div>
+    <div class="fade-up" style="display:flex; justify-content:center;">
+      <div class="shelf" style="height:380px; width:100%;">
+        <div class="shelf-row r1">
+          <div class="jar tall"><div class="jar-lid"></div><div class="jar-body olive-fill"><div class="jar-label"></div></div></div>
+          <div class="jar"><div class="jar-lid"></div><div class="jar-body pomegranate"><div class="jar-label"></div></div></div>
+          <div class="jar short"><div class="jar-lid"></div><div class="jar-body cream"><div class="jar-label"></div></div></div>
+        </div>
+        <div class="shelf-row r2">
+          <div class="jar"><div class="jar-lid"></div><div class="jar-body"><div class="jar-label"></div></div></div>
+          <div class="jar tall"><div class="jar-lid"></div><div class="jar-body pomegranate"><div class="jar-label"></div></div></div>
+          <div class="jar short"><div class="jar-lid"></div><div class="jar-body olive-fill"><div class="jar-label"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-dark">
+  <div class="wrap">
+    <div class="section-head fade-up">
+      <div>
+        <p class="eyebrow" style="color:var(--gold)">Three steps, one season</p>
+        <h2>Getting your first batch listed</h2>
+      </div>
+    </div>
+    <div class="steps fade-up">
+      <div class="step"><span class="num">01</span><h3>Tell us what you make</h3><p>Category, region, and the story behind it &mdash; a co-op recipe, a family method, a single hillside grove.</p></div>
+      <div class="step"><span class="num">02</span><h3>Set price &amp; batch size</h3><p>You decide the jar size, the price per unit, and how many you can part with this season.</p></div>
+      <div class="step"><span class="num">03</span><h3>Get your provenance stamp</h3><p>We verify your region and harvest date, then stamp your listing so buyers can trust it on sight.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap" style="max-width:760px;">
+    <div class="section-head fade-up" style="display:block;">
+      <p class="eyebrow">Apply to trade</p>
+      <h2 style="margin-top:14px;">Start your seller application</h2>
+      <p style="margin-top:14px;">Takes about five minutes. We'll follow up by email within two business days.</p>
+    </div>
+    <form class="form-box fade-up" id="seller-form">
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="sname">Your name or household</label>
+          <input type="text" id="sname" required>
+        </div>
+        <div class="form-row">
+          <label for="semail">Email</label>
+          <input type="email" id="semail" required>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="sregion">Region / village</label>
+          <input type="text" id="sregion" required>
+        </div>
+        <div class="form-row">
+          <label for="skind">Primary category</label>
+          <select id="skind">
+            <option>Oils &amp; Pressed Goods</option>
+            <option>Jams &amp; Preserves</option>
+            <option>Pickled Mkhalel</option>
+            <option>Syrups &amp; Molasses</option>
+            <option>Grains &amp; Kishk</option>
+            <option>Dried Herbs &amp; Blends</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="sdesc">What do you make, and how?</label>
+        <textarea id="sdesc" placeholder="e.g. Cold-pressed olive oil from a family grove, harvested each November..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Submit Application</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand" style="color:var(--parchment)"><span class="brand-mark">&#9670;</span> Mouneh</div>
+        <p>A direct trading post connecting households and small producers of traditional mouneh with the people who still want it made the old way.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul><li><a href="shop.html">All Categories</a></li><li><a href="shop.html">Preserves</a></li></ul>
+      </div>
+      <div>
+        <h4>Trade</h4>
+        <ul><li><a href="sell.html">Become a Seller</a></li><li><a href="index.html#how">How Trading Works</a></li></ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul><li><a href="index.html#about">About Mouneh</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Mouneh Trading Post. Made with respect for the jar.</span>
+      <span>Weighed &amp; stamped by hand.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById("seller-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    showToast("Application received — we'll be in touch by email.");
+    e.target.reset();
+  });
+</script>
+</body>
+</html>

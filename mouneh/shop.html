@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop the Shelf &mdash; Mouneh Trading Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="wrap nav">
+    <a href="index.html" class="brand"><span class="brand-mark">&#9670;</span> Mouneh <small>Trading Post</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="sell.html">Sell on Mouneh</a></li>
+      <li><a href="index.html#how">How It Works</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-link">Crate <span class="cart-count">0</span></a>
+      <a href="shop.html" class="btn btn-primary btn-sm">Browse Goods</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Shop</div>
+    <p class="eyebrow">The full shelf</p>
+    <h1>Every jar currently in trade</h1>
+  </div>
+</div>
+
+<section style="padding-top:56px;">
+  <div class="wrap shop-layout">
+    <aside class="filter-box">
+      <h4>Category</h4>
+      <div class="filter-group" id="filter-kind"></div>
+      <h4>Region</h4>
+      <div class="filter-group" id="filter-region"></div>
+      <h4>Max Price: <span id="price-label">$25</span></h4>
+      <div class="filter-group">
+        <input type="range" min="5" max="25" value="25" id="price-range">
+      </div>
+      <button class="btn btn-ghost btn-block btn-sm" id="clear-filters">Clear Filters</button>
+    </aside>
+
+    <div>
+      <div class="shop-toolbar">
+        <span class="result-count" id="result-count">12 items</span>
+        <select id="sort-select">
+          <option value="featured">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Name: A&ndash;Z</option>
+        </select>
+      </div>
+      <div class="product-grid" id="shop-grid"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand" style="color:var(--parchment)"><span class="brand-mark">&#9670;</span> Mouneh</div>
+        <p>A direct trading post connecting households and small producers of traditional mouneh with the people who still want it made the old way.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All Categories</a></li>
+          <li><a href="shop.html">Oils &amp; Pressed</a></li>
+          <li><a href="shop.html">Preserves</a></li>
+          <li><a href="shop.html">Pickles &amp; Mkhalel</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Trade</h4>
+        <ul>
+          <li><a href="sell.html">Become a Seller</a></li>
+          <li><a href="sell.html">Seller Guidelines</a></li>
+          <li><a href="index.html#how">How Trading Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="index.html#about">About Mouneh</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Regions We Cover</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Mouneh Trading Post. Made with respect for the jar.</span>
+      <span>Weighed &amp; stamped by hand.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const state = {
+    kinds: new Set(params.get("kind") ? [params.get("kind")] : []),
+    regions: new Set(),
+    maxPrice: 25,
+    sort: "featured"
+  };
+
+  const kinds = [...new Set(PRODUCTS.map(p => p.kind))];
+  const regions = [...new Set(PRODUCTS.map(p => p.region))];
+
+  document.getElementById("filter-kind").innerHTML = kinds.map(k => `
+    <label><input type="checkbox" value="${k}" data-filter="kind" ${state.kinds.has(k) ? "checked" : ""}> ${k}</label>
+  `).join("");
+  document.getElementById("filter-region").innerHTML = regions.map(r => `
+    <label><input type="checkbox" value="${r}" data-filter="region"> ${r}</label>
+  `).join("");
+
+  document.querySelectorAll('[data-filter="kind"]').forEach(cb => cb.addEventListener("change", () => {
+    cb.checked ? state.kinds.add(cb.value) : state.kinds.delete(cb.value);
+    render();
+  }));
+  document.querySelectorAll('[data-filter="region"]').forEach(cb => cb.addEventListener("change", () => {
+    cb.checked ? state.regions.add(cb.value) : state.regions.delete(cb.value);
+    render();
+  }));
+  document.getElementById("price-range").addEventListener("input", (e) => {
+    state.maxPrice = Number(e.target.value);
+    document.getElementById("price-label").textContent = "$" + state.maxPrice;
+    render();
+  });
+  document.getElementById("sort-select").addEventListener("change", (e) => {
+    state.sort = e.target.value;
+    render();
+  });
+  document.getElementById("clear-filters").addEventListener("click", () => {
+    state.kinds.clear(); state.regions.clear(); state.maxPrice = 25;
+    document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    document.getElementById("price-range").value = 25;
+    document.getElementById("price-label").textContent = "$25";
+    render();
+  });
+
+  function render(){
+    let list = PRODUCTS.filter(p =>
+      (state.kinds.size === 0 || state.kinds.has(p.kind)) &&
+      (state.regions.size === 0 || state.regions.has(p.region)) &&
+      p.price <= state.maxPrice
+    );
+    if(state.sort === "price-asc") list.sort((a,b) => a.price - b.price);
+    if(state.sort === "price-desc") list.sort((a,b) => b.price - a.price);
+    if(state.sort === "name") list.sort((a,b) => a.name.localeCompare(b.name));
+
+    document.getElementById("result-count").textContent = `${list.length} item${list.length !== 1 ? "s" : ""}`;
+
+    const grid = document.getElementById("shop-grid");
+    if(list.length === 0){
+      grid.innerHTML = `<p style="grid-column:1/-1; padding:40px 0; color:rgba(34,29,23,0.6);">No jars match those filters yet &mdash; try widening your search.</p>`;
+      return;
+    }
+    grid.innerHTML = list.map(p => `
+      <a href="product.html?id=${p.id}" class="card">
+        <div class="card-media" style="background:var(--parchment-dim);">
+          ${jarSwatch(p.jarType, 84)}
+          <div class="stamp"><span class="region">${p.region}</span><span class="year">${p.year}</span></div>
+        </div>
+        <div class="card-body">
+          <span class="kind">${p.kind}</span>
+          <h3>${p.name}</h3>
+          <span class="vendor">${p.vendor}</span>
+          <div class="card-foot">
+            <span class="price">${money(p.price)} <span>/ ${p.unit}</span></span>
+          </div>
+        </div>
+      </a>`).join("");
+  }
+  render();
+</script>
+</body>
+</html>
