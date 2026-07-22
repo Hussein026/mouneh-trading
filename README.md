@@ -19,7 +19,12 @@ mouneh/
 │   └── style.css        All styling — design tokens, layout, components
 ├── js/
 │   ├── data.js            Product catalogue (array of objects) + small helpers
-│   └── main.js           Cart engine (localStorage), toasts, tabs, scroll reveal, nav
+│   └── main.js           Cart engine (localStorage), toasts, tabs, scroll reveal, nav, PWA install/service worker registration
+├── manifest.json        Web app manifest — name, icons, colors (makes the site installable)
+├── sw.js                    Service worker — caches pages/assets so the site works offline once opened
+├── icon-192.png            App icon (Android/Chrome)
+├── icon-512.png            App icon (Android/Chrome, larger)
+├── apple-touch-icon.png   App icon (iOS "Add to Home Screen")
 └── README.md
 ```
 
@@ -127,7 +132,21 @@ Because it's just `localStorage`, the cart persists across page reloads and brow
 
 ---
 
-## 6. Known limitations (this is a front-end demo)
+## 6. Using it as a mobile app (PWA)
+
+This site is a **Progressive Web App**, so it can be installed on a phone like a real app instead of just opening as a browser tab:
+
+- **Android (Chrome/Edge):** visiting the site shows an "Install App" button in the nav (or the browser's own install banner). Tapping it adds a Mouneh icon to the home screen that opens full-screen, no browser UI.
+- **iPhone (Safari):** Safari doesn't show an install prompt automatically — open the site, tap the **Share** icon, then **Add to Home Screen**.
+- Once installed/opened once, `sw.js` (the service worker) caches all pages and assets, so the app still opens and browses even with no internet connection (the cart still works too, since it's all `localStorage`).
+
+**Important:** the service worker and install prompt only work over **HTTPS** (or `localhost` while testing). They will not activate if you open the site directly from a `file://` path or over plain HTTP — host it on GitHub Pages, Netlify, or Vercel (all HTTPS by default) for this to work.
+
+If you change any file inside `ASSETS` in `sw.js` (or add a new page), bump `CACHE_NAME` in `sw.js` (e.g. `mouneh-cache-v2`) so returning visitors actually get the update instead of a stale cached copy.
+
+---
+
+## 7. Known limitations (this is a front-end demo)
 
 - No real backend, database, authentication, or payment processing
 - Cart data lives only in the visiting browser's `localStorage`
@@ -138,8 +157,10 @@ To make this production-ready you'd want to add a backend (e.g. Node/Express + a
 
 ---
 
-## 7. Deploying
+## 8. Deploying
 
 Since it's fully static, it can be hosted for free on:
 - **GitHub Pages** — push this repo, then enable Pages in the repo Settings → Pages → Deploy from branch `main`
 - **Netlify / Vercel** — drag-and-drop the folder or connect the GitHub repo
+
+All three give you HTTPS automatically, which is required for the installable app (PWA) features to work — see section 6.
