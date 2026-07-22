@@ -102,3 +102,26 @@ document.addEventListener("DOMContentLoaded", () => {
   initReveal();
   initNavToggle();
 });
+
+/* ===================== PWA: SERVICE WORKER + INSTALL PROMPT ===================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+
+let deferredInstallPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const btn = document.querySelector("#install-app-btn");
+  if (btn) btn.style.display = "inline-flex";
+});
+
+function promptInstall(){
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; });
+  const btn = document.querySelector("#install-app-btn");
+  if (btn) btn.style.display = "none";
+}
